@@ -96,21 +96,21 @@ For each behavior, we can evaluate the model on the following test sets:
 
 ```bash
 # Generate steering vectors for layers of the model for a certain behavior
-python generate_vectors.py --layers $(seq 0 31) --save_activations --model_size "7b" --behaviors sycophancy
+python generate_vectors.py --layers $(seq 0 31) --save_activations --model_size "7b" --behaviors hallucination
 
 # Normalize steering vectors per layer to have the same norm
 python normalize_vectors.py
 
 # Evaluate model on A/B, open-ended or TruthfulQA test sets while using CAA
-python prompting_with_steering.py --behaviors sycophancy --layers $(seq 0 31) --multipliers -1 0 1 --type ab --model_size "7b"
-python prompting_with_steering.py --behaviors sycophancy --layers 13 --multipliers -2 -1.5 -1 -0.5 0 0.5 1 1.5 2 --type ab --model_size "7b" --system_prompt pos
+python prompting_with_steering.py --behaviors hallucination --layers $(seq 0 31) --multipliers -1 0 1 --type ab --model_size "7b"
+python prompting_with_steering.py --behaviors hallucination --layers 13 --multipliers -2 -1.5 -1 -0.5 0 0.5 1 1.5 2 --type ab --model_size "7b" --system_prompt pos
 
 # Plot PCA of constrastive activations
-python plot_activations.py --behaviors sycophancy --layers $(seq 0 31) --model_size "7b"
+python plot_activations.py --behaviors hallucination --layers $(seq 0 31) --model_size "7b"
 
 # Plot results of CAA steering effect
 python plot_results.py --layers $(seq 0 31) --multipliers 1 --type ab
-python plot_results.py --layers $(seq 0 31) --multipliers -1 0 1 --behaviors sycophancy --type ab
+python plot_results.py --layers $(seq 0 31) --multipliers -1 0 1 --behaviors hallucination --type ab
 
 # Finetune a llama on a behavioral dataset using supervised finetuning on the A/B tokens
 python finetune_llama.py --behavior sycophancy --direction pos
