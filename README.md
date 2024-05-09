@@ -110,7 +110,7 @@ python plot_activations.py --behaviors hallucination --layers $(seq 0 31) --mode
 
 # Plot results of CAA steering effect
 python plot_results.py --layers $(seq 0 31) --multipliers 1 --type ab
-python plot_results.py --layers $(seq 0 31) --multipliers -1 0 1 --behaviors sycophancy refusal --type ab
+python plot_results.py --layers $(seq 0 31) --multipliers -1 0 1 --behaviors refusal --type ab
 
 # Finetune a llama on a behavioral dataset using supervised finetuning on the A/B tokens
 python finetune_llama.py --behavior sycophancy --direction pos
