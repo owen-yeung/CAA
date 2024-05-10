@@ -73,6 +73,7 @@ def generate_save_vectors_for_behavior(
     save_activations: bool,
     behavior: List[str],
     model: LlamaWrapper,
+    cluster_norm: bool,
 ):
     data_path = get_ab_data_path(behavior)
     if not os.path.exists(get_vector_dir(behavior)):
@@ -113,8 +114,14 @@ def generate_save_vectors_for_behavior(
         all_pos_layer = t.stack(pos_activations[layer])
         all_neg_layer = t.stack(neg_activations[layer])
 
+        
         # Add cluster norm (before taking mean?)
-        all_pos_layer, all_neg_layer = normalize_cluster(all_pos_layer, all_neg_layer)
+        if cluster_norm:
+            print("Cluster norm processing...")
+            all_pos_layer, all_neg_layer = normalize_cluster(all_pos_layer, all_neg_layer)
+            print("Cluster norm complete.")
+        else:
+            print("No cluster norm")
 
         # Try with and without this mean call
         vec = (all_pos_layer - all_neg_layer).mean(dim=0)
@@ -138,6 +145,7 @@ def generate_save_vectors(
     use_base_model: bool,
     model_size: str,
     behaviors: List[str],
+    cluster_norm: bool,
 ):
     """
     layers: list of layers to generate vectors for
@@ -151,7 +159,7 @@ def generate_save_vectors(
     )
     for behavior in behaviors:
         generate_save_vectors_for_behavior(
-            layers, save_activations, behavior, model
+            layers, save_activations, behavior, model, cluster_norm
         )
 
 
@@ -162,6 +170,7 @@ if __name__ == "__main__":
     parser.add_argument("--use_base_model", action="store_true", default=False)
     parser.add_argument("--model_size", type=str, choices=["7b", "13b"], default="7b")
     parser.add_argument("--behaviors", nargs="+", type=str, default=ALL_BEHAVIORS)
+    parser.add_argument("--cluster_norm", action="store_true", default=False)
 
     args = parser.parse_args()
     generate_save_vectors(
@@ -169,5 +178,6 @@ if __name__ == "__main__":
         args.save_activations,
         args.use_base_model,
         args.model_size,
-        args.behaviors
+        args.behaviors,
+        args.cluster_norm
     )

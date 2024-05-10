@@ -96,7 +96,8 @@ For each behavior, we can evaluate the model on the following test sets:
 
 ```bash
 # Generate steering vectors for layers of the model for a certain behavior
-python generate_vectors.py --layers $(seq 0 31) --save_activations --model_size "7b" --behaviors coordinate-other-ais corrigible-neutral-HHH myopic-reward survival-instinct --use_base_model
+# Use flag --cluster_norm
+python generate_vectors.py --layers $(seq 0 31) --save_activations --model_size "7b" --behaviors hallucination coordinate-other-ais corrigible-neutral-HHH myopic-reward survival-instinct --use_base_model
 python generate_vectors.py --layers $(seq 0 31) --save_activations --model_size "7b" --use_base_model
 
 # Normalize steering vectors per layer to have the same norm

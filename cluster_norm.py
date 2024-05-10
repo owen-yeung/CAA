@@ -1,20 +1,20 @@
-import os, sys, gc
+# import os, sys, gc
 
 import numpy as np
-import pandas as pd
+# import pandas as pd
 
-import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
+# import matplotlib.pyplot as plt
+# import matplotlib.patches as mpatches
 
 import torch as t
 from torch import nn, Tensor
 import torch.nn.functional as F
 
-from datasets import load_dataset
-from transformer_lens import HookedTransformer
+# from datasets import load_dataset
+# from transformer_lens import HookedTransformer
 
 from sklearn.cluster import HDBSCAN
-from sklearn.linear_model import LogisticRegression
+# from sklearn.linear_model import LogisticRegression
 
 from jaxtyping import Float
 from typing import Tuple
