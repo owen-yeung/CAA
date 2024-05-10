@@ -16,6 +16,7 @@ from llama_wrapper import LlamaWrapper
 import argparse
 from typing import List
 from utils.tokenize import tokenize_llama_base, tokenize_llama_chat
+from cluster_norm import normalize_cluster
 from behaviors import (
     get_vector_dir,
     get_activations_dir,
@@ -111,6 +112,10 @@ def generate_save_vectors_for_behavior(
     for layer in layers:
         all_pos_layer = t.stack(pos_activations[layer])
         all_neg_layer = t.stack(neg_activations[layer])
+        
+        # Add cluster norm (before taking mean?)
+        all_pos_layer, all_neg_layer = normalize_cluster(all_pos_layer, all_neg_layer)
+
         vec = (all_pos_layer - all_neg_layer).mean(dim=0)
         t.save(
             vec,

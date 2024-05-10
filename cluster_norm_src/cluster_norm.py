@@ -22,7 +22,7 @@ from copy import deepcopy
 from itertools import product
 import random
 
-def _normalize_cluster(
+def normalize_cluster(
             # self,
             x: Float[Tensor, "batch d_hidden"],
             y: Float[Tensor, "batch d_hidden"],
