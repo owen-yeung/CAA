@@ -96,13 +96,15 @@ For each behavior, we can evaluate the model on the following test sets:
 
 ```bash
 # Generate steering vectors for layers of the model for a certain behavior
-python generate_vectors.py --layers $(seq 0 31) --save_activations --model_size "7b" --behaviors corrigible-neutral-HHH myopic-reward survival-instinct --use_base_model
+python generate_vectors.py --layers $(seq 0 31) --save_activations --model_size "7b" --behaviors coordinate-other-ais corrigible-neutral-HHH myopic-reward survival-instinct --use_base_model
+python generate_vectors.py --layers $(seq 0 31) --save_activations --model_size "7b" --use_base_model
 
 # Normalize steering vectors per layer to have the same norm
 python normalize_vectors.py
 
 # Evaluate model on A/B, open-ended or TruthfulQA test sets while using CAA
-python prompting_with_steering.py --behaviors coordinate-other-ais --layers $(seq 0 31) --multipliers -1 0 1 --type ab --model_size "7b"
+python prompting_with_steering.py --layers $(seq 0 31) --multipliers -1 0 1 --type ab --model_size "7b" --use_base_model
+
 python prompting_with_steering.py --behaviors coordinate-other-ais corrigible-neutral-HHH myopic-reward survival-instinct --layers $(seq 0 31) --multipliers -1 0 1 --type ab --model_size "7b"
 python prompting_with_steering.py --behaviors sycophancy refusal --layers 13 --multipliers -2 -1.5 -1 -0.5 0 0.5 1 1.5 2 --type ab --model_size "7b" --system_prompt pos
 
