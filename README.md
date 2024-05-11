@@ -97,18 +97,16 @@ For each behavior, we can evaluate the model on the following test sets:
 ```bash
 # Generate steering vectors for layers of the model for a certain behavior
 # Use flag --cluster_norm
-python generate_vectors.py --layers $(seq 0 31) --model_size "7b" --behaviors coordinate-other-ais --cluster_norm -- rescale
---save_activations
+python generate_vectors.py --layers $(seq 0 31) --model_size "7b" --behaviors corrigible-neutral-HHH hallucination myopic-reward survival-instinct refusal sycophancy --cluster_norm --rescale --save_activations
 
 corrigible-neutral-HHH myopic-reward survival-instinct --use_base_model
 python generate_vectors.py --layers $(seq 0 31) --save_activations --model_size "7b" --use_base_model
 
 # Normalize steering vectors per layer to have the same norm
-python normalize_vectors.py
+python normalize_vectors.py --behaviors coordinate-other-ais 
 
 # Evaluate model on A/B, open-ended or TruthfulQA test sets while using CAA
-python prompting_with_steering.py --layers $(seq 0 31) --multipliers -1 0 1 --type ab --model_size "7b" 
---cluster_norm
+python prompting_with_steering.py --layers $(seq 0 31) --multipliers -1 0 1 --type ab --model_size "7b" --behaviors coordinate-other-ais 
  --use_base_model
 
 python prompting_with_steering.py --behaviors coordinate-other-ais corrigible-neutral-HHH myopic-reward survival-instinct --layers $(seq 0 31) --multipliers -1 0 1 --type ab --model_size "7b"

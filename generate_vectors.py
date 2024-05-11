@@ -168,7 +168,7 @@ def generate_save_vectors(
     )
     for behavior in behaviors:
         generate_save_vectors_for_behavior(
-            layers, save_activations, behavior, model, cluster_norm
+            layers, save_activations, behavior, model, cluster_norm, rescale
         )
 
 
