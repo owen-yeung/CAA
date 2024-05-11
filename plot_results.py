@@ -432,7 +432,8 @@ def plot_layer_sweeps(
             pos_per_layer.append(pos_res)
             neg_per_layer.append(neg_res)
         all_results.append((pos_per_layer, neg_per_layer))
-        print(pos_per_layer, neg_per_layer)
+        print(f"Pos per layer:\n{pos_per_layer}")
+        print(f"Neg per layer:\n{neg_per_layer}")
         plt.plot(
             sorted(layers),
             pos_per_layer,
