@@ -74,6 +74,7 @@ def generate_save_vectors_for_behavior(
     behavior: List[str],
     model: LlamaWrapper,
     cluster_norm: bool,
+    rescale: bool,
 ):
     data_path = get_ab_data_path(behavior)
     if not os.path.exists(get_vector_dir(behavior)):
@@ -114,17 +115,24 @@ def generate_save_vectors_for_behavior(
         all_pos_layer = t.stack(pos_activations[layer])
         all_neg_layer = t.stack(neg_activations[layer])
 
-        
+        # Try with and without this mean call
+        vec = (all_pos_layer - all_neg_layer).mean(dim=0)
+
         # Add cluster norm (before taking mean?)
         if cluster_norm:
+            no_cluster_vec_norm = vec.norm().item()
             print("Cluster norm processing...")
             all_pos_layer, all_neg_layer = normalize_cluster(all_pos_layer, all_neg_layer)
             print("Cluster norm complete.")
+            vec = (all_pos_layer - all_neg_layer).mean(dim=0) 
+            if rescale:
+                cluster_vec_norm = vec.norm().item()
+                vec = vec * no_cluster_vec_norm / cluster_vec_norm
         else:
             print("No cluster norm")
 
-        # Try with and without this mean call
-        vec = (all_pos_layer - all_neg_layer).mean(dim=0)
+        print(f"norm: {vec.norm().item()}")
+
         t.save(
             vec,
             get_vector_path(behavior, layer, model.model_name_path),
@@ -146,6 +154,7 @@ def generate_save_vectors(
     model_size: str,
     behaviors: List[str],
     cluster_norm: bool,
+    rescale: bool,
 ):
     """
     layers: list of layers to generate vectors for
@@ -171,6 +180,7 @@ if __name__ == "__main__":
     parser.add_argument("--model_size", type=str, choices=["7b", "13b"], default="7b")
     parser.add_argument("--behaviors", nargs="+", type=str, default=ALL_BEHAVIORS)
     parser.add_argument("--cluster_norm", action="store_true", default=False)
+    parser.add_argument("--rescale", action="store_true", default=False)
 
     args = parser.parse_args()
     generate_save_vectors(
@@ -179,5 +189,6 @@ if __name__ == "__main__":
         args.use_base_model,
         args.model_size,
         args.behaviors,
-        args.cluster_norm
+        args.cluster_norm,
+        args.rescale
     )

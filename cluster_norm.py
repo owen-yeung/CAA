@@ -26,7 +26,8 @@ def normalize_cluster(
             # self,
             x: Float[Tensor, "batch d_hidden"],
             y: Float[Tensor, "batch d_hidden"],
-            device="cuda"
+            device="cuda",
+            preserve_norm : bool = False,
     ) -> Tuple[Float[Tensor, "batch d_hidden"], Float[Tensor, "batch d_hidden"]]:
         # average the contrastive examples
         v = (x + y) / 2.
